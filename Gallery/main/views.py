@@ -1,6 +1,6 @@
 # main/views.py
 from django.shortcuts import render
-from .models import Image
+from .models import Category
 
 images1 = [
     {'id': 1, 'user_avatar': 'main/avatars/ava1.jpg', 'user_nickname': 'John', 'image': 'main/img/picture1.jpg',
@@ -57,3 +57,34 @@ def image_detail(request, image_number):
         return render(request, 'main/image_detail.html', {'image': image})
     else:
         return render(request, 'main/image_detail.html', {'image_number': image_number})
+
+
+def categories(request):
+    categories = [
+        Category(name='Природа', slug='nature'),
+        Category(name='Город', slug='city'),
+        Category(name='Машины', slug='cars'),
+        Category(name='Животные', slug='animals'),
+        Category(name='Hi-Tech', slug='Hi-Tech'),
+        Category(name='Спорт', slug='sport'),
+        Category(name='Космос', slug='cosmos'),
+        Category(name='Наука', slug='science'),
+
+    ]
+    return render(request, 'main/categories.html', {'categories': categories})
+
+
+def category_images(request, category_slug):
+    categories = {
+        'nature': 'Природа',
+        'city': 'Город',
+        'cars': 'Машины',
+        'animals': 'Животные',
+        'Hi-Tech': 'Hi-Tech',
+        'sport': 'Спорт',
+        'cosmos': 'Космос',
+        'science': 'Наука',
+    }
+
+    category_name = categories.get(category_slug, 'Неизвестная категория')
+    return render(request, 'main/category_images.html', {'category_slug': category_slug, 'category_name': category_name})

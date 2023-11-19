@@ -25,5 +25,6 @@ from . import views
 urlpatterns = [
                   path('', views.index, name='home'),
                   path('image/<int:image_number>/', views.image_detail, name='image_detail'),
-
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # пока не используется
+                  path('categories/', views.categories, name='categories'),
+                  path('categories/<slug:category_slug>/', views.category_images, name='category_images'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
