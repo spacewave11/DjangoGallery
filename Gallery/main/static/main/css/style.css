@@ -101,6 +101,7 @@ nav ul li {
     display: block;
 }
 
+
 @media (max-width: 768px) {
     .custom-card img {
         max-width: 100%;
