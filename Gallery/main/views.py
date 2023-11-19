@@ -85,6 +85,12 @@ def category_images(request, category_slug):
         'cosmos': 'Космос',
         'science': 'Наука',
     }
-
+    images = images1
     category_name = categories.get(category_slug, 'Неизвестная категория')
-    return render(request, 'main/category_images.html', {'category_slug': category_slug, 'category_name': category_name})
+    return render(request, 'main/category_images.html',
+                  {'category_slug': category_slug, 'category_name': category_name, 'images': images})
+
+
+def account(request):
+    images = images1
+    return render(request, 'main/account.html', {'images': images})

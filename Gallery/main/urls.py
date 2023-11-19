@@ -27,4 +27,5 @@ urlpatterns = [
                   path('image/<int:image_number>/', views.image_detail, name='image_detail'),
                   path('categories/', views.categories, name='categories'),
                   path('categories/<slug:category_slug>/', views.category_images, name='category_images'),
+                  path('account/', views.account, name='account'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
