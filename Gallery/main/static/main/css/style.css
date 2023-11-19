@@ -74,3 +74,36 @@ nav ul li {
         max-height: none;
     }
 }
+
+.custom-card {
+    margin-bottom: 20px;
+    max-width: 660px;
+    margin: 0 auto;
+}
+
+.custom-card img {
+    max-width: 100%;
+}
+
+.custom-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    position: relative;
+}
+
+.custom-avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .custom-card img {
+        max-width: 100%;
+        max-height: none;
+    }
+}
