@@ -29,4 +29,5 @@ urlpatterns = [
                   path('categories/', views.categories, name='categories'),
                   path('categories/<slug:category_slug>/', views.category_images, name='category_images'),
                   path('account/', views.account, name='account'),
+                  path('top_authors/', views.top_authors, name='top_authors'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

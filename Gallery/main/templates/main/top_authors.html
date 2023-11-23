@@ -1,0 +1,28 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}TOP 15 авторов{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% for img in images|slice:":15" %}
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="card position-relative">
+            <div class="card-body">
+                <a href="{% url 'image_detail' image_number=forloop.counter %}">
+                    <img src="{% static img.image %}" alt="Image" class="img-fluid">
+                </a>
+            </div>
+            <div class="card-footer card-footer-top-authors d-flex align-items-center">
+                <span class="avatar-number mr-1">{{ forloop.counter }}</span>
+                <img src="{% static img.user_avatar %}" alt="Avatar Image" class="avatar-top-authors mr-2">
+                <h5 class="card-title mb-0">{{ img.user_nickname }}</h5>
+                <small class="text-muted ml-auto">123456</small>
+            </div>
+
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+{% endblock %}

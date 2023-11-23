@@ -1,4 +1,3 @@
-<!-- main/templates/main/header.html -->
 <header class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
         <a class="navbar-brand" href="/">Gallery</a>
@@ -12,6 +11,9 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'categories' %}">Категории</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'top_authors' %}">TOP15 авторов</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'account' %}">Аккаунт</a>

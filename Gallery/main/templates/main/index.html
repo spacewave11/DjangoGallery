@@ -2,24 +2,24 @@
 {% load static %}
 
 {% block content %}
-<div class="row">
-    {% for img in images %}
-    <div class="col-md-4 col-sm-6 mb-3">
-        <div class="card position-relative">
-            <div class="card-body">
-                <a href="{% url 'image_detail' image_number=forloop.counter %}">
-                    <img src="{% static img.image %}" alt="Dog Image" class="img-fluid">
-                </a>
-            </div>
-            <div class="card-footer d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <img src="{% static img.user_avatar %}" alt="Avatar Image" class="avatar mr-2">
-                    <h5 class="card-title mb-0 ml-4">{{ img.user_nickname }}</h5>
+    <div class="row">
+        {% for img in images %}
+        <div class="col-md-4 col-sm-6 mb-3">
+            <div class="card position-relative">
+                <div class="card-body">
+                    <a href="{% url 'image_detail' image_number=forloop.counter %}">
+                        <img src="{% static img.image %}" alt="Image" class="img-fluid">
+                    </a>
                 </div>
-                <small class="text-muted">{{ img.timestamp }}</small>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="{% static img.user_avatar %}" alt="Avatar Image" class="avatar mr-2">
+                        <h5 class="card-title mb-0 ml-4">{{ img.user_nickname }}</h5>
+                    </div>
+                    <small class="text-muted">{{ img.timestamp }}</small>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 {% endblock %}
