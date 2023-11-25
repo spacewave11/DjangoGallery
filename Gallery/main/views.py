@@ -98,3 +98,6 @@ def account(request):
 def top_authors(request):
     images = images1
     return render(request, 'main/top_authors.html', {'images': images})
+
+def not_found_view(request, exception):
+    return render(request, "main/404.html")

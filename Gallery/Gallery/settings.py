@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-70&1pflx-5cgcjb_$b9cd8eod=a4_^+v=k_iz&(bwuah%==h5+
 # DEBUG = False
 # ALLOWED_HOSTS = ["*"]
 # ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
 #В режиме отладки такая:
 DEBUG = True
 ALLOWED_HOSTS = []
