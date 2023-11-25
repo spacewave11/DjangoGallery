@@ -52,15 +52,16 @@ nav ul li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 16px;
+    padding: 4px 5px;
     position: relative;
+
 }
 
 .card-footer-top-authors {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 8px;
+    padding: 4px 5px;
     position: relative;
 }
 
@@ -69,11 +70,7 @@ nav ul li {
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    top: 4px;
     margin-right: 10px;
-    position: absolute;
-    bottom: 8px;
-    left: 4px;
 }
 
 .avatar-number {

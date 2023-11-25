@@ -8,8 +8,8 @@
     <div class="col-md-12">
         <h2>Изображения в категории {{ category_name }}</h2>
         <div class="row">
-            {% for img in images|slice:":11" %}
-            <div class="col-md-4 col-sm-6 mb-3">
+            {% for img in images|slice:":12" %}
+            <div class="col mb-3">
                 <div class="card position-relative">
                     <div class="card-body">
                         <a href="{% url 'image_detail' image_number=forloop.counter %}">
