@@ -1,0 +1,29 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-3">
+        <form method="get" class="form-inline">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary ml-2">Filter</button>
+        </form>
+    </div>
+    {% for picture in pictures %}
+    <div class="col mb-3">
+        <div class="card position-relative">
+            <div class="card-body">
+                <img src="{{ picture.image.url }}" alt="Image" class="img-fluid">
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img src="{{ picture.author.account.account_image.url }}" alt="Avatar Image" class="avatar mr-2">
+                    <h5 class="card-title mb-0 ml-0 ml-md-4">{{ picture.author }}</h5>
+                </div>
+                <small class="text-muted">{{ picture.date }}</small>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

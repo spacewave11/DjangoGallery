@@ -1,4 +1,3 @@
-# main/views.py
 from django.shortcuts import render
 from .models import Category
 
@@ -35,7 +34,7 @@ images1 = [
      'timestamp': '18 ноября в 22:00'},
     {'id': 16, 'user_avatar': 'main/avatars/ava16.jpg', 'user_nickname': 'Natalee', 'image': 'main/img/picture16.jpg',
      'timestamp': '18 ноября в 22:00'},
-    {'id': 17, 'user_avatar': 'main/avatars/ava17.jpg', 'user_nickname': 'Yulia', 'image': 'main/img/picture17.jpg',
+    {'id': 17, 'user_avatar': 'main/avatars/ava17.jpg', 'user_nickname': 'Julia', 'image': 'main/img/picture17.jpg',
      'timestamp': '18 ноября в 22:00'},
     {'id': 18, 'user_avatar': 'main/avatars/ava18.jpg', 'user_nickname': 'SamAltman', 'image': 'main/img/picture18.jpg',
      'timestamp': '19 июля в 17:20'},
@@ -68,7 +67,6 @@ def categories(request):
         Category(name='Спорт', slug='sport'),
         Category(name='Космос', slug='cosmos'),
         Category(name='Наука', slug='science'),
-
     ]
     return render(request, 'main/categories.html', {'categories': categories})
 
@@ -99,5 +97,6 @@ def top_authors(request):
     images = images1
     return render(request, 'main/top_authors.html', {'images': images})
 
-def not_found_view(request, exception):
-    return render(request, "main/404.html")
+
+def error404(request, exception):
+    return render(request, 'main/404.html')
