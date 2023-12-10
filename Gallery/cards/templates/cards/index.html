@@ -8,12 +8,10 @@
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary ml-2">Filter</button>
         </form>
-<!--        <div class="ml-auto">-->
-<!--            <a href="?sorting=date" class="btn btn-outline-secondary">Date</a>-->
-<!--            <a href="?sorting=downloads" class="btn btn-outline-secondary">Downloads</a>-->
-<!--            <a href="?sorting=rating" class="btn btn-outline-secondary">Rating</a>-->
-<!--        </div>-->
     </div>
+</div>
+
+<div class="row">
     {% for picture in pictures %}
     <div class="col mb-3">
         <div class="card position-relative">

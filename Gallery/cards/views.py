@@ -13,6 +13,8 @@ def index(request):
             pictures = pictures.filter(category=form.cleaned_data['category'])
         if form.cleaned_data['authors']:
             pictures = pictures.filter(author=form.cleaned_data['authors'])
+        if form.cleaned_data['tag_search']:
+            pictures = pictures.filter(tags__title__icontains=form.cleaned_data['tag_search'])
 
         sorting = form.cleaned_data['sorting']
         if sorting == 'date':

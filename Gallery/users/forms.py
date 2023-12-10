@@ -1,8 +1,8 @@
-# users/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from cards.models import Picture
+from .validators import clean_email
 
 
 class ImageUploadForm(forms.ModelForm):
@@ -15,14 +15,8 @@ class ImageUploadForm(forms.ModelForm):
 
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(help_text='Введите действительный адрес электронной почты.')
+    email = forms.EmailField(help_text='Введите действительный адрес электронной почты.', validators=[clean_email])
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Пользователь с таким адресом электронной почты уже существует.")
-        return email

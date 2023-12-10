@@ -8,6 +8,7 @@ class PictureFilterForm(forms.Form):
     category_choices = [('', 'All')] + list(categories)
     category = forms.ChoiceField(choices=category_choices, required=False)
     authors = forms.ModelChoiceField(queryset=User.objects.all(), empty_label='All', required=False)
+    tag_search = forms.CharField(max_length=100, required=False, label='Поиск по тегам')
 
     sorting_choices = [
         ('', 'Default'),
@@ -17,4 +18,3 @@ class PictureFilterForm(forms.Form):
         ('random', 'Random'),
     ]
     sorting = forms.ChoiceField(choices=sorting_choices, required=False)
-

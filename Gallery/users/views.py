@@ -1,4 +1,3 @@
-# users/views.py
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
@@ -13,7 +12,7 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            auth_login(request, user)  # автоматический вход после регистрации
+            auth_login(request, user)
             return redirect('home')
     else:
         form = RegistrationForm()
@@ -38,37 +37,30 @@ def index(request):
     return HttpResponse('Приложение Users')
 
 
-
 @login_required
 def upload_image(request):
     if request.method == 'POST':
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             try:
-                # Проверяем, есть ли у пользователя профиль Account
                 user_acc = request.user.account
             except Account.DoesNotExist:
-                # Если нет, создаем новый профиль
                 user_acc = Account.objects.create(user=request.user, nickname=request.user.username)
 
-            # Производим сохранение изображения с использованием профиля пользователя
             picture = form.save(commit=False)
             picture.author = request.user
-            picture.rating = 0  # Установите значение рейтинга по умолчанию
+            picture.rating = 0
             picture.downloads = 0
             picture.save()
-
-            # Ваша логика для сохранения категории
             picture.category = form.cleaned_data['category']
 
-            # Ваша логика для сохранения тегов
             tags_input = form.cleaned_data['tags']
             tags_list = [tag.strip() for tag in tags_input.split(',')]
             for tag_title in tags_list:
                 tag, created = Tag.objects.get_or_create(title=tag_title)
                 picture.tags.add(tag)
 
-            return redirect('home')  # Или куда угодно после успешной загрузки
+            return redirect('home')
     else:
         form = ImageUploadForm()
 

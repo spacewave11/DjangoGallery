@@ -1,13 +1,14 @@
 <!--# users/upload_image.html-->
 {% extends 'main/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-  <div class="container mt-5">
+  <div class="container mt-5 col-md-6">
     <h2>Загрузить изображение</h2>
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
-      {{ form.as_p }}
+      {{ form|crispy }}
       <button type="submit" class="btn btn-primary">Загрузить</button>
     </form>
   </div>
