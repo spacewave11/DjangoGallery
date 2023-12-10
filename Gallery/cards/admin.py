@@ -1,9 +1,10 @@
+# cards/admin.py
 from django.contrib import admin
 from .models import *
 
 
 class PictureAdmin(admin.ModelAdmin):
-    list_display = ['title', 'image', 'author', 'date']
+    list_display = ['title', 'image', 'author', 'date', 'category']
     list_filter = ['category', 'author', 'date']
 
 
