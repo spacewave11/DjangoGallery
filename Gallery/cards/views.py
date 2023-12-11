@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Picture
 from .forms import PictureFilterForm
 from django.db.models.functions import Random
@@ -30,14 +30,9 @@ def index(request):
     return render(request, 'cards/index.html', context)
 
 
-
-
-
-# def image_detail(request, image_id):
-#     image = Picture.objects.get(pk=image_id)
-#     # images = Picture.objects.all()
-#     # a = images.first()
-#     return render(request, 'cards/image_detail.html', {'image': image})
+def image_detail(request, image_id):
+    picture = get_object_or_404(Picture, pk=image_id)
+    return render(request, 'cards/image_detail.html', {'picture': picture})
 #
 #
 # def card_list(request):
