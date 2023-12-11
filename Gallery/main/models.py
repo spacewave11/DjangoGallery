@@ -1,4 +1,4 @@
-from django.db import models
+# from django.db import models
 
 
 # class Image(models.Model):
@@ -11,11 +11,7 @@ from django.db import models
 #         return f'Image by {self.user_nickname} - {self.timestamp}'
 
 
-class Category:
-    def __init__(self, name, slug):
-        self.name = name
-        self.slug = slug
-
-
-
-
+# class Category:
+#     def __init__(self, name, slug):
+#         self.name = name
+#         self.slug = slug

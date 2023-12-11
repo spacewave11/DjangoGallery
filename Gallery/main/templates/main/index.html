@@ -7,7 +7,7 @@
         <div class="col mb-3">
             <div class="card position-relative">
                 <div class="card-body">
-                    <a href="{% url 'image_detail' image_number=forloop.counter %}">
+                    <a href="{% url 'main_image_detail' image_number=forloop.counter %}">
                         <img src="{% static img.image %}" alt="Image" class="img-fluid">
                     </a>
                 </div>

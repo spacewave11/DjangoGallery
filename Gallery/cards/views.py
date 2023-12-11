@@ -2,11 +2,15 @@ from django.shortcuts import render, get_object_or_404
 from .models import Picture
 from .forms import PictureFilterForm
 from django.db.models.functions import Random
+from django.http import HttpResponse
+from django.conf import settings
+from django.db.models import F
+import os
 
 
 def index(request):
     form = PictureFilterForm(request.GET)
-    pictures = Picture.objects.all()
+    pictures = Picture.objects.filter(author__isnull=False)
 
     if form.is_valid():
         if form.cleaned_data['category']:
@@ -33,50 +37,16 @@ def index(request):
 def image_detail(request, image_id):
     picture = get_object_or_404(Picture, pk=image_id)
     return render(request, 'cards/image_detail.html', {'picture': picture})
-#
-#
-# def card_list(request):
-#     images = Image.objects.all()
-#     return render(request, 'cards/card_list.html', {'images': images})
 
 
+def download_image(request, image_id):
+    picture = get_object_or_404(Picture, pk=image_id)
 
-# def index(request):
-# print(pictures.tags.first())
-# tag = Tag.objects.filter(title='Snow')[0]
-# tagged_pics = Picture.objects.filter(tags=tag)
-# print(tagged_pics)
+    Picture.objects.filter(pk=image_id).update(downloads=F('downloads') + 1)
 
-# picture = Picture.objects.all().first()
-# pictures = Picture.objects.filter(author_id=1)
-# print(pictures[1].category)
+    image_path = os.path.join(settings.MEDIA_ROOT, str(picture.image))
+    with open(image_path, 'rb') as image_file:
+        response = HttpResponse(image_file.read(), content_type='image/jpeg')
+        response['Content-Disposition'] = f'attachment; filename="{picture.image.name}"'
 
-# picture = Picture.objects.filter(author_id=1).first()
-# print(picture.author.account.account_image.url)
-
-# user_list = User.objects.all()
-# for user in user_list:
-#     print(Picture.objects.filter(author=user))
-# print(user_list)
-
-# form = PictureFilterForm(request.GET)
-# pictures = Picture.objects.all()
-#
-# if form.is_valid() and form.cleaned_data['category']:
-#     pictures = pictures.filter(category=form.cleaned_data['category'])
-#
-# context = {'pictures': pictures, 'form': form}
-# return render(request, 'cards/index.html', context)
-
-# return render(request, 'cards/index.html', {'images': images})
-
-
-# def image_detail(request, image_number):
-#     images = images1
-#
-#     image = next((img for img in images if img['id'] == image_number), None)
-#
-#     if image:
-#         return render(request, 'cards/image_detail.html', {'image': image})
-#     else:
-#         return render(request, 'cards/image_detail.html', {'image_number': image_number})
+    return response

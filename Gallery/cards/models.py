@@ -23,7 +23,8 @@ class Picture(models.Model):
         ('Hi-Tech', 'Hi-Tech'),
         ('sport', 'Sport'),
         ('cosmos', 'Cosmos'),
-        ('science', 'Science')
+        ('science', 'Science'),
+        ('minimalism', 'Minimalism')
     )
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     image = models.ImageField(upload_to='images/')

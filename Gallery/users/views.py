@@ -3,7 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 from .models import *
-from .forms import ImageUploadForm, RegistrationForm
+from .forms import ImageUploadForm, RegistrationForm, AvatarUploadForm
 from cards.models import Picture, Tag
 
 
@@ -13,7 +13,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             auth_login(request, user)
-            return redirect('home')
+            return redirect('cards_index')
     else:
         form = RegistrationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -24,7 +24,7 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('home')
+            return redirect('cards_index')
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
@@ -60,10 +60,30 @@ def upload_image(request):
                 tag, created = Tag.objects.get_or_create(title=tag_title)
                 picture.tags.add(tag)
 
-            return redirect('home')
+            return redirect('cards_index')
     else:
         form = ImageUploadForm()
 
     return render(request, 'users/upload_image.html', {'form': form})
 
 
+@login_required
+def profile(request):
+    user = request.user
+    last_uploaded_images = Picture.objects.filter(author=user).order_by('-date')[:3]
+
+    try:
+        account = user.account
+    except Account.DoesNotExist:
+        account = Account.objects.create(user=user, nickname=user.username)
+
+    if request.method == 'POST':
+        form = AvatarUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            account.account_image = form.cleaned_data['avatar']
+            account.save()
+            return redirect('profile')
+    else:
+        form = AvatarUploadForm()
+
+    return render(request, 'users/account.html', {'user': user, 'last_uploaded_images': last_uploaded_images, 'form': form})

@@ -10,10 +10,19 @@
             </div>
             <div class="custom-card-footer d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <img src="{{ picture.author.account_image }}" alt="Avatar Image" class="custom-avatar mr-2">
+                    <img src="{{ picture.author.account.account_image.url }}" alt="Avatar Image" class="custom-avatar mr-2">
                     <h5 class="card-title mb-0 ml-4">{{ picture.author }}</h5>
                 </div>
                 <small class="text-muted">{{ picture.date }}</small>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col text-center">
+                <form method="post" action="{% url 'download_image' picture.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Скачать</button>
+                </form>
             </div>
         </div>
     </div>

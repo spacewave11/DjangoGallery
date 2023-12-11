@@ -1,0 +1,60 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Аккаунт{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="user-info">
+            <p>Пользователь: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="user-stats">
+            <p>Загружено изображений: {{ user.account.image_set.count }}</p>
+            <p>Изображений в топе: {{ top_images|length }}</p>
+<!--            <p>Рейтинг пользователя: {{ user.account.rating }}</p>-->
+        </div>
+    </div>
+    <div class="col-md-4">
+    <div class="user-avatar">
+        <img src="{{ user.account.account_image.url }}" alt="User Avatar" class="img-fluid">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary mt-2">Загрузить новый аватар</button>
+        </form>
+    </div>
+</div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="top-images">
+            <h6>3 последних изображений:</h6>
+            <div class="row">
+                {% for img in last_uploaded_images %}
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card position-relative">
+                        <div class="card-body">
+
+                                <img src="{{ img.image.url }}" alt="Image" class="img-fluid">
+
+                        </div>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ img.author.account.account_image.url }}" alt="Avatar Image" class="avatar mr-2">
+                                <h5 class="card-title mb-0 ml-4">{{ img.author }}</h5>
+                            </div>
+                            <small class="text-muted">{{ img.date }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
