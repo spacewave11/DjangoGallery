@@ -24,22 +24,17 @@ class Picture(models.Model):
         ('sport', 'Sport'),
         ('cosmos', 'Cosmos'),
         ('science', 'Science'),
-        ('minimalism', 'Minimalism')
+        ('minimalism', 'Minimalism'),
+        ('new year', 'Новый год'),
     )
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     image = models.ImageField(upload_to='images/')
     title = models.CharField('Название', max_length=50, default='')
-    rating = models.IntegerField('Рейтинг изображения')
-    downloads = models.IntegerField('Количество скачиваний')
+    rating = models.IntegerField('Rating')  # Рейтинг изображения
+    downloads = models.IntegerField('Скачали')  # Количество скачиваний
     tags = models.ManyToManyField(to=Tag, blank=True)
     date = models.DateTimeField('Дата публикации', auto_now_add=True)
     category = models.CharField(choices=categories, max_length=30)
-
-    # методы моделей
-    # def __str__(self):
-    #     # return f'{str(self.image)[7:]} от {str(self.date)[:16]}'
-    #     return f'{str(self.title)} от {str(self.date)[:16]}'
-    # print('image---------------', image)
 
     def get_absolute_url(self):
         return f'/{self.category}/{self.id}'
@@ -52,3 +47,9 @@ class Picture(models.Model):
         for t in self.tags.all():
             s += t.title + ' '
         return s
+
+    # методы моделей
+    # def __str__(self):
+    #     # return f'{str(self.image)[7:]} от {str(self.date)[:16]}'
+    #     return f'{str(self.title)} от {str(self.date)[:16]}'
+    # print('image---------------', image)
