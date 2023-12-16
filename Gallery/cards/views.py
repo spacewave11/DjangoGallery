@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Picture
 from .forms import PictureFilterForm
 from django.db.models.functions import Random
@@ -35,8 +35,14 @@ def index(request):
 
 
 def image_detail(request, image_id):
-    picture = get_object_or_404(Picture, pk=image_id)
-    return render(request, 'cards/image_detail.html', {'picture': picture})
+    picture = get_object_or_404(Picture, id=image_id)
+
+    is_author = request.user == picture.author
+
+    template_name = 'cards/image_detail_profile.html' if is_author else 'cards/image_detail.html'
+
+    context = {'picture': picture}
+    return render(request, template_name, context)
 
 
 def download_image(request, image_id):
@@ -50,3 +56,13 @@ def download_image(request, image_id):
         response['Content-Disposition'] = f'attachment; filename="{picture.image.name}"'
 
     return response
+
+
+def delete_image(request, image_id):
+    picture = get_object_or_404(Picture, id=image_id)
+
+    if request.user == picture.author:
+        picture.delete()
+        return redirect('profile')
+    else:
+        return redirect('profile')

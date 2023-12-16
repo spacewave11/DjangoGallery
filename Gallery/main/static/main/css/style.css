@@ -120,6 +120,17 @@ nav ul li {
     display: block;
 }
 
+.card-body img,
+.top-images .card-body img {
+    height: 224px;
+    object-fit: cover;
+}
+
+.small-avatar {
+    max-width: 250px;
+    max-height: 250px;
+}
+
 @media (max-width: 768px) {
     .image-detail img {
         max-width: 100%;

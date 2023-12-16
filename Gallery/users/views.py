@@ -16,7 +16,8 @@ def register(request):
             return redirect('cards_index')
     else:
         form = RegistrationForm()
-    return render(request, 'users/register.html', {'form': form})
+    context = {'form': form, 'active_page': 'register'}
+    return render(request, 'users/register.html', context)
 
 
 def login(request):
@@ -27,7 +28,8 @@ def login(request):
             return redirect('cards_index')
     else:
         form = AuthenticationForm()
-    return render(request, 'users/login.html', {'form': form})
+    context = {'form': form, 'active_page': 'login'}
+    return render(request, 'users/login.html', context)
 
 
 def index(request):
@@ -63,14 +65,14 @@ def upload_image(request):
             return redirect('cards_index')
     else:
         form = ImageUploadForm()
-
-    return render(request, 'users/upload_image.html', {'form': form})
+    context = {'form': form, 'active_page': 'upload_image'}
+    return render(request, 'users/upload_image.html', context)
 
 
 @login_required
 def profile(request):
     user = request.user
-    last_uploaded_images = Picture.objects.filter(author=user).order_by('-date')[:3]
+    all_uploaded_images = Picture.objects.filter(author=user).order_by('-date')
 
     try:
         account = user.account
@@ -85,5 +87,5 @@ def profile(request):
             return redirect('profile')
     else:
         form = AvatarUploadForm()
-
-    return render(request, 'users/account.html', {'user': user, 'last_uploaded_images': last_uploaded_images, 'form': form})
+    context = {'user': user, 'uploaded_images': all_uploaded_images, 'form': form, 'active_page': 'profile'}
+    return render(request, 'users/account.html', context)

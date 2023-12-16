@@ -58,7 +58,8 @@ def image_detail(request, image_number):
 
 def top_authors(request):
     images = images1
-    return render(request, 'main/top_authors.html', {'images': images})
+    context = {'images': images, 'active_page': 'top_authors'}
+    return render(request, 'main/top_authors.html', context)
 
 
 def error404(request, exception):
