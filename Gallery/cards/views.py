@@ -5,6 +5,7 @@ from django.db.models.functions import Random
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import F
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import os
 
 
@@ -29,6 +30,16 @@ def index(request):
             pictures = pictures.order_by('-rating')
         elif sorting == 'random':
             pictures = pictures.annotate(random_order=Random()).order_by('random_order')
+
+    paginator = Paginator(pictures, 15)
+    page = request.GET.get('page')
+
+    try:
+        pictures = paginator.page(page)
+    except PageNotAnInteger:
+        pictures = paginator.page(1)
+    except EmptyPage:
+        pictures = paginator.page(paginator.num_pages)
 
     context = {'pictures': pictures, 'form': form}
     return render(request, 'cards/index.html', context)
