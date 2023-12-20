@@ -7,6 +7,7 @@ from cards.models import Picture
 class AccountAdmin(admin.ModelAdmin):
     list_display = ['user', 'nickname', 'account_image_thumb', 'account_image_counts']
     list_filter = ['user']
+    search_fields = ['nickname__startswith', 'nickname']
 
     def account_image_thumb(self, obj):
         return mark_safe('<a href="{}"><img src="{}" width="auto" height="50" /></a>'.format(obj.account_image.url, obj.account_image.url))

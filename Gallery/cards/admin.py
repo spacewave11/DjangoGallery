@@ -7,6 +7,7 @@ class PictureAdmin(admin.ModelAdmin):
     list_display = ['title', 'image_thumb', 'author', 'date', 'category', 'downloads', 'rating']
     list_filter = ['category', 'author', 'date']
     ordering = ['-date', 'rating', 'downloads']
+    search_fields = ['title__startswith', 'tags__title']
 
     def image_thumb(self, obj):
         return mark_safe('<a href="{}"><img src="{}" width="auto" height="50" /></a>'.format(obj.image.url, obj.image.url))
@@ -17,6 +18,7 @@ class PictureAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = ['title']
     list_filter = ['title']
+    search_fields = ['title__startswith', 'title']
 
 
 admin.site.register(Picture, PictureAdmin)

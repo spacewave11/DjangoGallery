@@ -15,7 +15,7 @@
     {% for picture in pictures %}
     <div class="col mb-3">
         <div class="card position-relative">
-            <div class="card-body">
+            <div class="card-body d-flex justify-content-center align-items-center">
                 <a href="{% url 'cards_image_detail' picture.id %}">
                     <img src="{{ picture.image.url }}" alt="Image" class="img-fluid">
                 </a>

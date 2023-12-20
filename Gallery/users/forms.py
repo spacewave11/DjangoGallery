@@ -2,12 +2,12 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from cards.models import Picture
-from .validators import clean_email
+from .validators import clean_email, validate_tags
 
 
 class ImageUploadForm(forms.ModelForm):
     category = forms.ChoiceField(choices=Picture.categories)
-    tags = forms.CharField(max_length=100, help_text='Введите теги через запятую (до 10)')
+    tags = forms.CharField(max_length=100, help_text='Введите теги через запятую (до 10)', validators=[validate_tags])
 
     class Meta:
         model = Picture
