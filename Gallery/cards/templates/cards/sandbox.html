@@ -1,0 +1,140 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load users_extras %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-3">
+        <form method="get" class="form-inline">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary ml-2">Фильтр</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for picture in pictures %}
+    <div class="col mb-3">
+        <div class="card position-relative">
+            <div class="status-badge position-absolute ml-2">
+                {% if picture.is_verified %}
+                <span class="badge badge-success">Проверено</span>
+                {% else %}
+                <span class="badge badge-danger">На модерации</span>
+                {% endif %}
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <a href="{% url 'cards_image_detail' picture.id %}">
+                    <img src="{{ picture.image.url }}" alt="Image" class="img-fluid">
+                </a>
+            </div>
+            <div class="card-footer d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img src="{{ picture.author.account.account_image.url }}" alt="Avatar Image" class="avatar mr-2">
+                    <h5 class="card-title mb-0 ml-0 ml-md-4">{{ picture.author }}</h5>
+                </div>
+                <small class="text-muted">{{ picture.date|date:"M. d, H:i" }}</small>
+            </div>
+            {% if request.user|has_group:"Moderators" %}
+            <div class="row mt-3 moderator-tools">
+                <div class="col text-center">
+                    <div class="d-flex justify-content-between">
+                        <form method="post" action="{% url 'change_picture_status' picture.id %}"
+                              class="d-flex align-items-center">
+                            {% csrf_token %}
+                            <div class="form-check form-check-inline ml-2">
+                                {{ picture_status_form }}
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-success">Подтвердить</button>
+                        </form>
+                        <form method="post" action="{% url 'delete_image' picture.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if pictures.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1" aria-label="First">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ pictures.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">
+                Страница {{ pictures.number }} из {{ pictures.paginator.num_pages }}.
+            </span>
+        </li>
+
+        {% if pictures.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ pictures.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ pictures.paginator.num_pages }}" aria-label="Last">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleSwitches = document.querySelectorAll('.toggle-switch');
+
+      toggleSwitches.forEach(function(toggleSwitch) {
+        toggleSwitch.addEventListener('change', function() {
+          const pictureId = this.dataset.pictureId;
+          const isVerified = this.checked;
+
+          fetch('{% url "toggle_verification" %}', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ picture_id: pictureId, is_verified: isVerified }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const statusBadge = document.querySelector(`#statusBadge${pictureId}`);
+              statusBadge.innerHTML = data.is_verified
+                ? '<span class="badge badge-success">Проверено</span>'
+                : '<span class="badge badge-danger">На модерации</span>';
+            } else {
+              console.error(data.error);
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        });
+      });
+
+      // Функция для получения значения CSRF-токена из cookie
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+    });
+</script>

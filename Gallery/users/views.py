@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import ImageUploadForm, RegistrationForm, AvatarUploadForm
 from cards.models import Picture, Tag
+from django.contrib.auth.models import Group
 
 
 def register(request):
@@ -12,6 +13,8 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            group = Group.objects.get(name='Registered Users')
+            user.groups.add(group)
             auth_login(request, user)
             return redirect('cards_index')
     else:

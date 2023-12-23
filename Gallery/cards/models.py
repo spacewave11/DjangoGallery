@@ -16,15 +16,15 @@ class Tag(models.Model):
 
 class Picture(models.Model):
     categories = (
-        ('nature', 'Nature'),
-        ('city', 'City'),
-        ('cars', 'Cars'),
-        ('animals', 'Animals'),
+        ('nature', 'Природа'),
+        ('city', 'Город'),
+        ('cars', 'Машины'),
+        ('animals', 'Животные'),
         ('Hi-Tech', 'Hi-Tech'),
-        ('sport', 'Sport'),
-        ('cosmos', 'Cosmos'),
-        ('science', 'Science'),
-        ('minimalism', 'Minimalism'),
+        ('sport', 'Спорт'),
+        ('cosmos', 'Космос'),
+        ('science', 'Наука'),
+        ('minimalism', 'Минимализм'),
         ('new year', 'Новый год'),
     )
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -35,6 +35,7 @@ class Picture(models.Model):
     tags = models.ManyToManyField(to=Tag, blank=True)
     date = models.DateTimeField('Дата публикации', auto_now_add=True)
     category = models.CharField(choices=categories, max_length=30)
+    is_verified = models.BooleanField('Проверено', default=False)
 
     def get_absolute_url(self):
         return f'/{self.category}/{self.id}'
@@ -47,9 +48,3 @@ class Picture(models.Model):
         for t in self.tags.all():
             s += t.title + ' '
         return s
-
-    # методы моделей
-    # def __str__(self):
-    #     # return f'{str(self.image)[7:]} от {str(self.date)[:16]}'
-    #     return f'{str(self.title)} от {str(self.date)[:16]}'
-    # print('image---------------', image)
