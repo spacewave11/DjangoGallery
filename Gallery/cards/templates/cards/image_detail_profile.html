@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% block title %}Gallery - {{ picture.get_category_display }} {% if picture.tags.first %} {{ picture.tags.first }} {% endif %}{% endblock %}
 
 {% block content %}
 <div class="row">
