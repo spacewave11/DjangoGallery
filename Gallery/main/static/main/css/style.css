@@ -131,6 +131,7 @@ nav ul li {
     max-height: 250px;
 }
 
+
 @media (max-width: 768px) {
     .image-detail img {
         max-width: 100%;

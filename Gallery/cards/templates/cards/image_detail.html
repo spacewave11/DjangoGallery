@@ -15,7 +15,7 @@
                 <div class="d-flex align-items-center">
                     <img src="{{ picture.author.account.account_image.url }}" alt="Avatar Image"
                          class="custom-avatar mr-2">
-                    <h5 class="card-title mb-0 ml-4">{{ picture.author }}</h5>
+                    <h5 class="card-title mb-0 ml-0">{{ picture.author }}</h5>
                 </div>
                 <div class="d-flex flex-column align-items-end">
                     <div class="d-flex align-items-center">
@@ -30,9 +30,20 @@
             <div class="custom-card-footer d-flex justify-content-between align-items-center mt-3">
                 <small class="text-muted">Теги:
                     {% for tag in picture.tags.all %}
-                        {{ tag.title }}{% if not forloop.last %}, {% endif %}
+                    {{ tag.title }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </small>
+                {% if user.is_authenticated %}
+                <div class="d-flex align-items-center">
+                    <span class="mr-2" id="ratingValue">{{ picture.rating }}</span>
+                    <button class="btn btn-outline-success" id="upvoteBtn">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="btn btn-outline-danger" id="downvoteBtn">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="row mt-3">
@@ -45,4 +56,42 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const upvoteBtn = document.getElementById('upvoteBtn');
+        const downvoteBtn = document.getElementById('downvoteBtn');
+
+        upvoteBtn.addEventListener('click', function() {
+            vote('upvote');
+        });
+
+        downvoteBtn.addEventListener('click', function() {
+            vote('downvote');
+        });
+
+        function vote(voteType) {
+    fetch('{% url "vote" picture.id %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: `vote_type=${voteType === 'upvote' ? 'upvote' : 'downvote'}`,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('ratingValue').innerText = data.rating;
+            upvoteBtn.innerHTML = `<i class="fas fa-thumbs-up"></i>`;
+            downvoteBtn.innerHTML = `<i class="fas fa-thumbs-down"></i>`;
+        } else {
+            console.error(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+    });
+</script>
+
 {% endblock %}

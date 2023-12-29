@@ -13,5 +13,6 @@ urlpatterns = [
                   path('image/<int:image_id>/change_status/', views.change_picture_status,
                        name='change_picture_status'),
                   path('toggle_verification/', views.toggle_verification, name='toggle_verification'),
-
+                  path('tag_autocomplete/', views.tag_autocomplete, name='tag_autocomplete'),
+                  path('image/<int:image_id>/vote/', views.vote, name='vote'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Picture
+from .models import Picture, Tag, Upvote, Downvote
 from .forms import PictureFilterForm, PictureStatusForm, SandboxFilterForm
 from django.db.models.functions import Random
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
-from django.db.models import F
+from django.db.models import F, Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import os
 from django.http import JsonResponse
@@ -93,13 +93,50 @@ def sandbox(request):
 
 def image_detail(request, image_id):
     picture = get_object_or_404(Picture, id=image_id)
-
     is_author = request.user == picture.author
-
     template_name = 'cards/image_detail_profile.html' if is_author else 'cards/image_detail.html'
-
     context = {'picture': picture}
     return render(request, template_name, context)
+
+
+def vote(request, image_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        picture = get_object_or_404(Picture, id=image_id)
+        vote_type = request.POST.get('vote_type')
+
+        existing_upvote = Upvote.objects.filter(user=request.user, picture=picture).exists()
+        existing_downvote = Downvote.objects.filter(user=request.user, picture=picture).exists()
+
+        if vote_type == 'upvote':
+            if existing_downvote:
+                Downvote.objects.filter(user=request.user, picture=picture).delete()
+                change = 1
+            elif existing_upvote:
+                Upvote.objects.filter(user=request.user, picture=picture).delete()
+                change = 0
+            else:
+                Upvote.objects.create(user=request.user, picture=picture)
+                change = 1
+        elif vote_type == 'downvote':
+            if existing_upvote:
+                Upvote.objects.filter(user=request.user, picture=picture).delete()
+                change = -1
+            elif existing_downvote:
+                Downvote.objects.filter(user=request.user, picture=picture).delete()
+                change = 0
+            else:
+                Downvote.objects.create(user=request.user, picture=picture)
+                change = -1
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid vote type'})
+
+        upvotes_count = picture.upvotes.count()
+        downvotes_count = picture.downvotes.count()
+        picture.rating = upvotes_count - downvotes_count
+        picture.save()
+
+        return JsonResponse({'success': True, 'rating': picture.rating, 'change': change})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 def download_image(request, image_id):
@@ -137,6 +174,9 @@ def change_picture_status(request, image_id):
             picture.is_verified = form.cleaned_data['is_verified']
             picture.save()
 
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'is_verified': picture.is_verified})
+
     return redirect('sandbox')
 
 
@@ -156,5 +196,12 @@ def toggle_verification(request):
             return JsonResponse({'success': True, 'is_verified': picture.is_verified})
         except Picture.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Picture not found'})
-    else:
-        return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+
+def tag_autocomplete(request):
+    term = request.GET.get('term')
+    tags = Tag.objects.filter(Q(title__icontains=term))
+    tag_titles = [tag.title for tag in tags]
+    return JsonResponse(tag_titles, safe=False)

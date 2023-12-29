@@ -32,7 +32,7 @@
             <div class="card-footer d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <img src="{{ picture.author.account.account_image.url }}" alt="Avatar Image" class="avatar mr-2">
-                    <h5 class="card-title mb-0 ml-0 ml-md-4">{{ picture.author }}</h5>
+                    <h5 class="card-title mb-0 ml-0 ml-md-0">{{ picture.author }}</h5>
                 </div>
                 <small class="text-muted">{{ picture.date|date:"M. d, H:i" }}</small>
             </div>
@@ -97,45 +97,24 @@
     </ul>
 </nav>
 
-{% endblock %}
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleSwitches = document.querySelectorAll('.toggle-switch');
-
-      toggleSwitches.forEach(function(toggleSwitch) {
-        toggleSwitch.addEventListener('change', function() {
-          const pictureId = this.dataset.pictureId;
-          const isVerified = this.checked;
-
-          fetch('{% url "toggle_verification" %}', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-CSRFToken': getCookie('csrftoken'),
+    $(document).ready(function() {
+        $("#id_tag_search").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "{% url 'tag_autocomplete' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
             },
-            body: JSON.stringify({ picture_id: pictureId, is_verified: isVerified }),
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              const statusBadge = document.querySelector(`#statusBadge${pictureId}`);
-              statusBadge.innerHTML = data.is_verified
-                ? '<span class="badge badge-success">Проверено</span>'
-                : '<span class="badge badge-danger">На модерации</span>';
-            } else {
-              console.error(data.error);
-            }
-          })
-          .catch(error => console.error('Error:', error));
+            minLength: 2
         });
-      });
-
-      // Функция для получения значения CSRF-токена из cookie
-      function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-      }
     });
 </script>
+
+{% endblock %}

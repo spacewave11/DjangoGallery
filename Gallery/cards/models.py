@@ -48,3 +48,27 @@ class Picture(models.Model):
         for t in self.tags.all():
             s += t.title + ' '
         return s
+
+
+class Vote(models.Model):
+    VOTE_CHOICES = [
+        ('upvote', 'Upvote'),
+        ('downvote', 'Downvote'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='votes')
+    vote_type = models.CharField(max_length=10, choices=VOTE_CHOICES)
+
+    class Meta:
+        unique_together = ('user', 'picture', 'vote_type')
+
+
+class Upvote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='upvotes')
+
+
+class Downvote(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    picture = models.ForeignKey(Picture, on_delete=models.CASCADE, related_name='downvotes')

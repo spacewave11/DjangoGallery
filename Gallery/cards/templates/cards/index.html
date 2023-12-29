@@ -23,7 +23,7 @@
             <div class="card-footer d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <img src="{{ picture.author.account.account_image.url }}" alt="Avatar Image" class="avatar mr-2">
-                    <h5 class="card-title mb-0 ml-0 ml-md-4">{{ picture.author }}</h5>
+                    <h5 class="card-title mb-0 ml-0 ml-md-0">{{ picture.author }}</h5>
                 </div>
                 <small class="text-muted">{{ picture.date|date:"M. d, H:i" }}</small>
             </div>
@@ -67,5 +67,25 @@
         {% endif %}
     </ul>
 </nav>
+
+<script>
+    $(document).ready(function() {
+        $("#id_tag_search").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "{% url 'tag_autocomplete' %}",
+                    dataType: "json",
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            minLength: 2
+        });
+    });
+</script>
 
 {% endblock %}
